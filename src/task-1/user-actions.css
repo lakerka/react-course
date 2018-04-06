@@ -1,0 +1,11 @@
+.Task1App {
+    align: center;
+}
+
+.UserOutput {
+    margin: 20px auto;
+    padding: 5px;
+    border: 1px solid black;
+    max-width: 200px;
+    box-shadow: 2px 2px 8px black;
+}
