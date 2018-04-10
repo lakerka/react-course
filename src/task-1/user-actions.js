@@ -4,6 +4,7 @@ import _ from 'lodash';
 import './user-actions.css';
 
 
+// eslint-disable-next-line no-unused-vars
 export class Task1App extends React.Component {
     state = {
         people: [

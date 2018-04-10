@@ -2,7 +2,7 @@ import React from 'react';
 
 import './components.css'
 
-
+// eslint-disable-next-line no-unused-vars
 export class Task2App extends React.Component {
     constructor(props) {
         super(props);
