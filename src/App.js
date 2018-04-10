@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 
 import './App.css';
+import Layout from './components/layout/layout';
 
 import { Task2App } from './task-2/components';
 
@@ -9,7 +10,7 @@ class App extends Component {
     return (
       <div className="App">
         <h1>This is my React app!</h1>
-          <Task2App />
+          <Layout />
       </div>
     );
   }
