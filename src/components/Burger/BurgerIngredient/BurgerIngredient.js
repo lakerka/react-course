@@ -6,7 +6,7 @@ import classes from './BurgerIngredient.css';
 
 const BurgerIngredient = (props) => {
     let ingredient = null;
-    console.log(classes.BreadBottom);
+
     switch (props.type) {
         case ('bread-bottom'):
             ingredient = <div className={classes.BreadBottom} />;
