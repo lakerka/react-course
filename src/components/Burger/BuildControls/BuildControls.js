@@ -14,6 +14,7 @@ class BuildControls extends React.Component {
     render() {
         return (
             <div className={classes.BuildControls}>
+                <p>Total price: <strong>{this.props.totalPrice.toFixed(2)}</strong></p>
                 {
                     controls.map((control, i) =>
                         <BuildControl
@@ -25,6 +26,7 @@ class BuildControls extends React.Component {
                             removeIngredientHandler={this.props.removeIngredientHandler}
                         />)
                 }
+                <button className={classes.OrderButton} disabled={!this.props.purchasable}>Order now</button>
             </div>
         );
     }

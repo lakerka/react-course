@@ -1,4 +1,6 @@
 import React, { Component, Fragment } from 'react';
+import _ from 'lodash';
+
 
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -14,30 +16,38 @@ const INGREDIENT_PRICES = {
 class BurgerBuilder extends Component {
     state = {
         ingredients: {
-            salad: 1,
-            bacon: 1,
-            cheese: 2,
-            meat: 2
+            salad: 0,
+            bacon: 0,
+            cheese: 0,
+            meat: 0
         },
-        totalPrice: 2
+        totalPrice: 0,
+        purchasable: false
+    };
+
+    updatePurchasableState = (ingredients) => {
+        const ingredientCount = _.sum(_.values(ingredients));
+        const purchasable = ingredientCount > 0;
+        this.setState({ purchasable });
+    };
+
+    handleIngredient = (type, delta) => {
+        const currentCount = this.state.ingredients[type];
+        if (currentCount + delta >= 0) {
+            let ingredients = {...this.state.ingredients};
+            ingredients[type] = currentCount + delta;
+            const totalPrice = this.state.totalPrice + delta * INGREDIENT_PRICES[type];
+            this.setState({ ingredients, totalPrice });
+            this.updatePurchasableState(ingredients);
+        }
     };
 
     addIngredientHandler = (type) => {
-        const currentCount = this.state.ingredients[type];
-        let ingredients = { ...this.state.ingredients };
-        ingredients[type] = currentCount + 1;
-        const totalPrice = this.state.totalPrice + INGREDIENT_PRICES[type];
-        this.setState({ ingredients, totalPrice });
+        this.handleIngredient(type, 1);
     };
 
     removeIngredientHandler = (type) => {
-        const currentCount = this.state.ingredients[type];
-        if (currentCount > 0) {
-            let ingredients = { ...this.state.ingredients };
-            ingredients[type] = currentCount - 1;
-            const totalPrice = this.state.totalPrice - INGREDIENT_PRICES[type];
-            this.setState({ ingredients, totalPrice });
-        }
+        this.handleIngredient(type, -1);
     };
 
     render() {
@@ -50,6 +60,8 @@ class BurgerBuilder extends Component {
             <Fragment>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls
+                    totalPrice={this.state.totalPrice}
+                    purchasable={this.state.purchasable}
                     disabledInfo={disabledInfo}
                     addIngredientHandler={this.addIngredientHandler}
                     removeIngredientHandler={this.removeIngredientHandler}
