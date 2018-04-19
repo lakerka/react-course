@@ -4,6 +4,8 @@ import _ from 'lodash';
 
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 
 
 const INGREDIENT_PRICES = {
@@ -22,7 +24,9 @@ class BurgerBuilder extends Component {
             meat: 0
         },
         totalPrice: 0,
-        purchasable: false
+        purchasable: false,
+        isBeingPurchased: false
+
     };
 
     updatePurchasableState = (ingredients) => {
@@ -50,6 +54,10 @@ class BurgerBuilder extends Component {
         this.handleIngredient(type, -1);
     };
 
+    orderNowHandler = () => {
+        this.setState({ isBeingPurchased: true });
+    };
+
     render() {
         const disabledInfo = {};
         for(let key in this.state.ingredients) {
@@ -58,6 +66,9 @@ class BurgerBuilder extends Component {
 
         return (
             <Fragment>
+                <Modal show={this.state.isBeingPurchased}>
+                    <OrderSummary ingredients={this.state.ingredients}/>
+                </Modal>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls
                     totalPrice={this.state.totalPrice}
@@ -65,6 +76,7 @@ class BurgerBuilder extends Component {
                     disabledInfo={disabledInfo}
                     addIngredientHandler={this.addIngredientHandler}
                     removeIngredientHandler={this.removeIngredientHandler}
+                    orderNowHandler={this.orderNowHandler}
                 />
             </Fragment>
         );

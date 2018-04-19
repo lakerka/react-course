@@ -26,7 +26,12 @@ class BuildControls extends React.Component {
                             removeIngredientHandler={this.props.removeIngredientHandler}
                         />)
                 }
-                <button className={classes.OrderButton} disabled={!this.props.purchasable}>Order now</button>
+                <button className={classes.OrderButton}
+                        disabled={!this.props.purchasable}
+                        onClick={this.props.orderNowHandler}
+                >
+                    Order now
+                </button>
             </div>
         );
     }
