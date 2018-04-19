@@ -1,6 +1,8 @@
 import React, { Fragment } from 'react';
 import _ from 'lodash';
 
+import ButtonComponent from '../../UI/Button/Button';
+
 class OrderSummary extends React.Component {
     render() {
         const ingredientSummary = _.map(this.props.ingredients, (value, key) => (
@@ -16,6 +18,8 @@ class OrderSummary extends React.Component {
                     {ingredientSummary}
                 </ul>
                 <p>Continue to checkout?</p>
+                <ButtonComponent buttonType="Danger" clickHandler={this.props.cancelHandler}>Cancel</ButtonComponent>
+                <ButtonComponent buttonType="Success" clickHandler={this.props.orderHandler}>Continue</ButtonComponent>
             </Fragment>
         );
     }

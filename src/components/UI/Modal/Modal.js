@@ -1,19 +1,23 @@
-import React from 'react';
+import React, { Component, Fragment } from 'react';
 
 import classes from './Modal.css';
+import Backdrop from '../Backdrop/Backdrop';
 
 
-class Modal extends React.Component {
+class Modal extends Component {
     render() {
         return (
-            <div className={classes.Modal}
-                style={{
-                    transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
-                    visibility: this.props.show ? 'visible' : 'hidden'
-                }}
-            >
-                {this.props.children}
-            </div>
+            <Fragment>
+                <Backdrop show={this.props.show} clickHandler={this.props.modalClosedHandler} />
+                <div className={classes.Modal}
+                    style={{
+                        transform: this.props.show ? 'translateY(0)' : 'translateY(-100vh)',
+                        visibility: this.props.show ? 'visible' : 'hidden'
+                    }}
+                >
+                    {this.props.children}
+                </div>
+            </Fragment>
         );
     }
 }
