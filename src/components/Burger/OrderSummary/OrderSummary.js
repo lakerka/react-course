@@ -17,6 +17,7 @@ class OrderSummary extends React.Component {
                 <ul>
                     {ingredientSummary}
                 </ul>
+                <p><strong>Total price: {this.props.totalPrice.toFixed(2)}</strong></p>
                 <p>Continue to checkout?</p>
                 <ButtonComponent buttonType="Danger" clickHandler={this.props.cancelHandler}>Cancel</ButtonComponent>
                 <ButtonComponent buttonType="Success" clickHandler={this.props.orderHandler}>Continue</ButtonComponent>
