@@ -8,7 +8,10 @@ class NavigationItem extends Component {
             <li className={classes.NavigationItem}>
                 <a
                     className={this.props.active ? classes.active : null}
-                    href={this.props.link}>{this.props.children}</a>
+                    href={this.props.link}
+                >
+                    {this.props.children}
+                </a>
             </li>
         );
     }
