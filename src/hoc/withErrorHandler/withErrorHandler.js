@@ -8,15 +8,20 @@ const withErrorHandler = (WrappedComponent, client) => {
             error: null
         };
 
-        componentDidMount() {
-            client.interceptors.request.use(request => {
+        componentWillMount() {
+            this.requestInterceptor = client.interceptors.request.use(request => {
                 this.setState({ show: false, error: null });
                 return request;
             });
-            client.interceptors.response.use(res => res, error => {
+            this.responseInterceptor = client.interceptors.response.use(res => res, error => {
                 this.setState({ show: true, error: error.toString() });
-                return error;
+                // return error;
             });
+        }
+
+        componentWillUnmount() {
+            client.interceptors.request.eject(this.requestInterceptor);
+            client.interceptors.request.eject(this.responseInterceptor);
         }
 
         modalCloseHandler = () => this.setState({ show: false});

@@ -20,18 +20,25 @@ const INGREDIENT_PRICES = {
 
 class BurgerBuilder extends Component {
     state = {
-        ingredients: {
-            salad: 0,
-            bacon: 0,
-            cheese: 0,
-            meat: 0
-        },
+        ingredients: null,
         totalPrice: 0,
         purchasable: false,
         isBeingPurchased: false,
-        loading: false
+        loading: false,
+        ingredientsLoading: true,
+        hasErrors: false
 
     };
+
+    componentDidMount() {
+        client.get('/ingredients.json')
+            .then(response => {
+                this.setState({ ingredients: response.data });
+                this.updatePrice(response.data);
+            })
+            .catch(() => { this.setState({ hasErrors: true })})
+            .finally(() => this.setState({ ingredientsLoading: false }));
+    }
 
     updatePurchasableState = (ingredients) => {
         const ingredientCount = _.sum(_.values(ingredients));
@@ -39,13 +46,21 @@ class BurgerBuilder extends Component {
         this.setState({ purchasable });
     };
 
+    updatePrice(ingredients) {
+        let totalPrice = 0;
+        _.mapKeys(ingredients, ((v, k) => {
+            totalPrice += INGREDIENT_PRICES[k]*v;
+        }));
+        this.setState({ totalPrice });
+    }
+
     handleIngredient = (type, delta) => {
         const currentCount = this.state.ingredients[type];
         if (currentCount + delta >= 0) {
             let ingredients = {...this.state.ingredients};
             ingredients[type] = currentCount + delta;
-            const totalPrice = this.state.totalPrice + delta * INGREDIENT_PRICES[type];
-            this.setState({ ingredients, totalPrice });
+            this.setState({ ingredients });
+            this.updatePrice(ingredients);
             this.updatePurchasableState(ingredients);
         }
     };
@@ -72,11 +87,10 @@ class BurgerBuilder extends Component {
             ingredients: this.state.ingredients,
             price: this.state.totalPrice
         };
-        client.post('[][]/orders.json', order)
+        client.post('/orders.json', order)
             .then(response => console.log(response))
             .finally(() => this.setState({ loading: false, isBeingPurchased: false }));
     };
-
 
     render() {
         const disabledInfo = {};
@@ -93,8 +107,7 @@ class BurgerBuilder extends Component {
             />
         );
         const spinner = (<Spinner/>);
-
-        return (
+        const burgerBuilder = (
             <Fragment>
                 <Modal show={this.state.isBeingPurchased} modalClosedHandler={this.orderNowCancelHandler}>
                     {this.state.loading ? spinner : orderSummary}
@@ -109,8 +122,10 @@ class BurgerBuilder extends Component {
                     orderNowHandler={this.orderNowHandler}
                 />
             </Fragment>
-
         );
+
+        return this.state.ingredientsLoading ? spinner :
+            this.state.hasErrors ? null : burgerBuilder;
     }
 }
 
