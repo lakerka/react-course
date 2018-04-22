@@ -1,0 +1,16 @@
+.Navigation {
+    text-align:center;
+}
+
+.Navigation a {
+    margin: 4px;
+    text-decoration: none;
+}
+
+.Navigation a:hover {
+    color: orange;
+}
+
+.Navigation .active {
+    text-decoration: underline;
+}
