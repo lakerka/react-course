@@ -1,20 +1,24 @@
 import React, { Component } from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import './App.css';
 import Layout from './components/Layout/Layout';
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
-
-import Task3App from './task-3-routing/Task3App';
+import Checkout from './containers/Checkout/Checkout';
 
 class App extends Component {
     render() {
-        return <Task3App/>;
-        // return (
-        //     <div className="App">
-        //     <Layout />
-        //     <BurgerBuilder />
-        //     </div>
-        // );
+        return (
+            <BrowserRouter>
+                <div className="App">
+                    <Layout />
+                    <Switch>
+                        <Route path="/checkout" component={Checkout} />
+                        <Route path="/" exact component={BurgerBuilder} />
+                    </Switch>
+                </div>
+            </BrowserRouter>
+        );
     }
 }
 

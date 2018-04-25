@@ -7,6 +7,7 @@ import Users from './containers/Users/Users';
 import Navigation from './components/UI/Navigation/Navigation';
 import Course from './containers/Courses/Course/Course';
 
+// eslint-disable-next-line no-unused-vars
 class Task3App extends Component {
     render () {
         return (

@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 import _ from 'lodash';
-
+import { stringify } from 'qs';
 
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -82,14 +82,18 @@ class BurgerBuilder extends Component {
     };
 
     orderContinueHandler = () => {
-        this.setState({ loading: true });
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice
-        };
-        client.post('/orders.json', order)
-            .then(response => console.log(response))
-            .finally(() => this.setState({ loading: false, isBeingPurchased: false }));
+        this.props.history.push({
+            pathname: '/checkout',
+            search: stringify({ ingredients: this.state.ingredients }),
+        });
+        // this.setState({ loading: true });
+        // const order = {
+        //     ingredients: this.state.ingredients,
+        //     price: this.state.totalPrice
+        // };
+        // client.post('/orders.json', order)
+        //     .then(response => console.log(response))
+        //     .finally(() => this.setState({ loading: false, isBeingPurchased: false }));
     };
 
     render() {
