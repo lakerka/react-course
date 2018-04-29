@@ -9,6 +9,7 @@ class Navigation extends Component {
             <div className={classes.Navigation}>
                 <NavLink to="/users">Users</NavLink>
                 <NavLink to="/courses">Courses</NavLink>
+                <NavLink to="/orders">Orders</NavLink>
             </div>
         );
     }
