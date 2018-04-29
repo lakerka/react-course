@@ -10,9 +10,10 @@ class Checkout extends Component {
     constructor(props) {
         super(props);
         const params = parse(props.location.search, { ignoreQueryPrefix: true });
-        let { ingredients } = params;
+        let { ingredients, totalPrice } = params;
         ingredients = _.mapValues(ingredients, i => +i);
-        this.state = { ingredients };
+        totalPrice = +totalPrice;
+        this.state = { ingredients, totalPrice };
     }
 
     checkoutCancelHandler = () => this.props.history.goBack();
@@ -27,7 +28,16 @@ class Checkout extends Component {
                     cancelHandler={this.checkoutCancelHandler}
                     continueHandler={this.checkoutContinueHandler}
                 />
-                <Route path={this.props.match.path + '/contacts'} component={Contact} />
+                <Route
+                    path={this.props.match.path + '/contacts'}
+                    render={(props) => (
+                        <Contact
+                            {...props}
+                            ingredients={this.state.ingredients}
+                            totalPrice={this.state.totalPrice}
+                        />
+                    )}
+                />
             </div>
         );
     }

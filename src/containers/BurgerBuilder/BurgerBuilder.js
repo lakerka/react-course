@@ -24,7 +24,6 @@ class BurgerBuilder extends Component {
         totalPrice: 0,
         purchasable: false,
         isBeingPurchased: false,
-        loading: false,
         ingredientsLoading: true,
         hasErrors: false
 
@@ -84,22 +83,21 @@ class BurgerBuilder extends Component {
     orderContinueHandler = () => {
         this.props.history.push({
             pathname: '/checkout',
-            search: stringify({ ingredients: this.state.ingredients }),
+            search: stringify({
+                ingredients: this.state.ingredients,
+                totalPrice: this.state.totalPrice
+            }),
         });
-        // this.setState({ loading: true });
-        // const order = {
-        //     ingredients: this.state.ingredients,
-        //     price: this.state.totalPrice
-        // };
-        // client.post('/orders.json', order)
-        //     .then(response => console.log(response))
-        //     .finally(() => this.setState({ loading: false, isBeingPurchased: false }));
     };
 
     render() {
+        if (this.state.ingredientsLoading) {
+            return <Spinner />;
+        }
+
         const disabledInfo = {};
-        for(let key in this.state.ingredients) {
-            disabledInfo[key] = this.state.ingredients[key] === 0;
+        for(let [ingredient, name] of Object.entries(this.state.ingredients)) {
+            disabledInfo[name] = ingredient === 0;
         }
 
         const orderSummary = (
@@ -114,7 +112,7 @@ class BurgerBuilder extends Component {
         const burgerBuilder = (
             <Fragment>
                 <Modal show={this.state.isBeingPurchased} modalClosedHandler={this.orderNowCancelHandler}>
-                    {this.state.loading ? spinner : orderSummary}
+                    {orderSummary}
                 </Modal>
                 <Burger ingredients={this.state.ingredients}/>
                 <BuildControls
