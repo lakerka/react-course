@@ -4,22 +4,32 @@ import classes from './Input.css';
 
 
 class Input extends Component {
+    getClassName() {
+        const classNames = [classes.InputElement];
+        if (this.props.touched && this.props.valid === false) {
+            classNames.push(classes.Invalid);
+        }
+        return classNames.join(' ');
+    }
+
     render() {
         let element = null;
         const props = {
             ...this.props.inputConfig,
             onChange: this.props.onChange
         };
+        const className = this.getClassName();
+
         switch (this.props.inputtype) {
             case ('input'):
                 element = (<input
-                    className={classes.InputElement}
+                    className={className}
                     {...props}
                 />);
                 break;
             case ('textarea'):
                 element = (<textarea
-                    className={classes.InputElement}
+                    className={className}
                     {...props}
                 />);
                 break;
@@ -31,7 +41,7 @@ class Input extends Component {
                 ));
                 element = (
                     <select
-                        className={classes.InputElement}
+                        className={className}
                         {...props}
                     >
                         {options}
@@ -40,7 +50,7 @@ class Input extends Component {
                 break;
             default:
                 element = (<input
-                    className={classes.InputElement}
+                    className={className}
                     {...props}
                     />);
                 break;
