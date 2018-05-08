@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { connect } from 'react-redux';
 
 import ButtonComponent from '../../UI/Button/Button';
 import classes from './Contact.css';
@@ -95,7 +96,7 @@ class Contact extends Component {
 
     getContactData() {
         const contactData = {};
-        for(const input of this.state.contactDataForm) {
+        for(const input of this.state.contactDataForm.inputs) {
             contactData[input.name] = input.value;
         }
         return contactData;
@@ -178,4 +179,6 @@ class Contact extends Component {
     }
 }
 
-export default Contact;
+const mapStateToProps = ({ ingredients, totalPrice  }) => ({ ingredients, totalPrice });
+
+export default connect(mapStateToProps)(Contact);
