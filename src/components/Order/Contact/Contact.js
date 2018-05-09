@@ -108,7 +108,7 @@ class Contact extends Component {
             price: this.props.totalPrice,
             contactData: this.getContactData()
         };
-        this.props.orderBurger(order);
+        this.props.orderBurger(order, this.props.token);
     };
 
     static validateInput(input) {
@@ -174,15 +174,16 @@ class Contact extends Component {
     }
 }
 
-const mapStateToProps = ({ burgerBuilder, order }) => ({
+const mapStateToProps = ({ burgerBuilder, order, auth }) => ({
     ingredients: burgerBuilder.ingredients,
     totalPrice: burgerBuilder.totalPrice,
-    loading: order.loading
+    loading: order.loading,
+    token: auth.token,
 });
 
 const mapDispatchToProps = dispatch => {
     return {
-      orderBurger: (order) => dispatch(actions.orderBurger(order))
+      orderBurger: (order, token) => dispatch(actions.orderBurger(order, token))
     };
 };
 

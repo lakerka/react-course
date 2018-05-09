@@ -76,7 +76,7 @@ class Auth extends Component {
         form.valid = valid;
     }
 
-    formChangeHandler(event, index) {
+    formChangeHandler = (event, index) => {
         const form = _.cloneDeep(this.state.form);
         const input = form.inputs[index];
         input.touched = true;
@@ -84,7 +84,7 @@ class Auth extends Component {
         Auth.validateInput(input);
         Auth.validateForm(form);
         this.setState({ form });
-    }
+    };
 
     submitHandler = event => {
         event.preventDefault();
