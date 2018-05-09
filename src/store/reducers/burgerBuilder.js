@@ -1,15 +1,11 @@
 import _ from 'lodash';
 
-import * as actionsTypes from './actionTypes';
+import * as actionsTypes from '../actions/actionTypes';
 
 const initialState = {
-  ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-  },
-  totalPrice: 0
+    ingredients: null,
+    totalPrice: 0,
+    hasErrors: false
 };
 
 const INGREDIENT_PRICES = {
@@ -20,7 +16,7 @@ const INGREDIENT_PRICES = {
 };
 
 
-const reducer = (state = initialState, action) => {
+const burgerBuilderReducer = (state = initialState, action) => {
     const stateClone = _.cloneDeep(state);
     switch (action.type) {
         case actionsTypes.ADD_INGREDIENT:
@@ -33,9 +29,18 @@ const reducer = (state = initialState, action) => {
                 stateClone.totalPrice -= INGREDIENT_PRICES[action.ingredientName];
             }
             return stateClone;
+        case actionsTypes.SET_INGREDIENTS:
+            stateClone.ingredients = action.ingredients;
+            stateClone.totalPrice = 0;
+            for(const [ingredient, count] of Object.entries(action.ingredients)) {
+                stateClone.totalPrice += INGREDIENT_PRICES[ingredient]*count;
+            }
+            stateClone.hasErrors = false;
+            return stateClone;
+
         default:
             return state;
     }
 };
 
-export default reducer;
+export default burgerBuilderReducer;

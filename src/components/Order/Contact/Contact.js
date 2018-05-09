@@ -2,11 +2,13 @@ import React, { Component } from 'react';
 import _ from 'lodash';
 import { connect } from 'react-redux';
 
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import ButtonComponent from '../../UI/Button/Button';
 import classes from './Contact.css';
-import client from '../../../config';
 import Spinner from '../../UI/Spinner/Spinner';
 import Input from '../../UI/Input/Input';
+import * as actions from '../../../store/actions/index';
+import client from '../../../config';
 
 
 class Contact extends Component {
@@ -84,15 +86,12 @@ class Contact extends Component {
                 }
             ]
         },
-        loading: false
     };
 
     orderSuccessHandler = () => {
-        this.setState({ loading: false });
+        // where should we put this ?
         this.props.history.push('/');
     };
-
-    orderErrorHandler = () => this.setState({ loading: false });
 
     getContactData() {
         const contactData = {};
@@ -104,16 +103,12 @@ class Contact extends Component {
 
     orderHandler = (event) => {
         event.preventDefault();
-        this.setState({ loading: true });
         const order = {
             ingredients: this.props.ingredients,
             price: this.props.totalPrice,
             contactData: this.getContactData()
         };
-
-        client.post('/orders.json', order)
-            .then(() => this.orderSuccessHandler())
-            .catch(() => this.orderErrorHandler());
+        this.props.orderBurger(order);
     };
 
     static validateInput(input) {
@@ -173,12 +168,22 @@ class Contact extends Component {
         return (
             <div className={classes.Contact}>
                 <h4>Enter your contact data</h4>
-                { this.state.loading ? spinner : form }
+                { this.props.loading ? spinner : form }
             </div>
         );
     }
 }
 
-const mapStateToProps = ({ ingredients, totalPrice  }) => ({ ingredients, totalPrice });
+const mapStateToProps = ({ burgerBuilder, order }) => ({
+    ingredients: burgerBuilder.ingredients,
+    totalPrice: burgerBuilder.totalPrice,
+    loading: order.loading
+});
 
-export default connect(mapStateToProps)(Contact);
+const mapDispatchToProps = dispatch => {
+    return {
+      orderBurger: (order) => dispatch(actions.orderBurger(order))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(Contact, client));

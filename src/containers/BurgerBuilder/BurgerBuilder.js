@@ -9,26 +9,19 @@ import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 import client from '../../config';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
-import * as actionTypes from '../../store/actionTypes';
+import * as actions from '../../store/actions/index';
+import {orderBurgerInit} from '../../store/actions';
 
 
 class BurgerBuilder extends Component {
     state = {
         purchasable: false,
         isBeingPurchased: false,
-        ingredientsLoading: true,
-        hasErrors: false
 
     };
 
     componentDidMount() {
-        client.get('/ingredients.json')
-            .then(response => {
-                // this.setState({ ingredients: response.data });
-                // this.updatePrice(response.data);
-            })
-            .catch(() => { this.setState({ hasErrors: true })})
-            .finally(() => this.setState({ ingredientsLoading: false }));
+        this.props.initIngredients();
     }
 
     isPurchasable = () => {
@@ -45,17 +38,22 @@ class BurgerBuilder extends Component {
     };
 
     orderContinueHandler = () => {
+        this.props.orderBurgerInit();
         this.props.history.push('/checkout');
     };
 
     render() {
-        if (this.props.ingredientsLoading) {
+        if (this.props.hasErrors) {
+            return null;
+        }
+        if (!this.props.ingredients) {
             return <Spinner />;
         }
 
+
         const disabledInfo = {};
-        for(let [ingredient, name] of Object.entries(this.props.ingredients)) {
-            disabledInfo[name] = ingredient === 0;
+        for(const [name, count] of Object.entries(this.props.ingredients)) {
+            disabledInfo[name] = count === 0;
         }
 
         const orderSummary = (
@@ -66,8 +64,7 @@ class BurgerBuilder extends Component {
                 orderHandler={this.orderContinueHandler}
             />
         );
-        const spinner = (<Spinner/>);
-        const burgerBuilder = (
+        return (
             <Fragment>
                 <Modal show={this.state.isBeingPurchased} modalClosedHandler={this.orderNowCancelHandler}>
                     {orderSummary}
@@ -83,20 +80,22 @@ class BurgerBuilder extends Component {
                 />
             </Fragment>
         );
-
-        return this.props.ingredientsLoading ? spinner :
-            this.state.hasErrors ? null : burgerBuilder;
     }
 }
 
-const mapStateToProps = ({ ingredients, totalPrice  }) => ({ ingredients, totalPrice });
+const mapStateToProps = ({ burgerBuilder }) => ({
+    ingredients: burgerBuilder.ingredients,
+    totalPrice: burgerBuilder.totalPrice,
+    hasErrors: burgerBuilder.hasErrors
+});
 
 const mapDispathToProps = (dispatch) => {
     return {
-        addIngredientHandler: (ingredientName) => dispatch({ type: actionTypes.ADD_INGREDIENT, ingredientName }),
-        removeIngredientHandler: (ingredientName) => dispatch({ type: actionTypes.REMOVE_INGREDIENT, ingredientName })
+        initIngredients: () => dispatch(actions.initIngredients()),
+        addIngredientHandler: (ingredientName) => dispatch(actions.addIngredient(ingredientName)),
+        removeIngredientHandler: (ingredientName) => dispatch(actions.removeIngredient(ingredientName)),
+        orderBurgerInit: () => dispatch(orderBurgerInit()),
     };
 };
-
 
 export default connect(mapStateToProps, mapDispathToProps)(withErrorHandler(BurgerBuilder, client));
