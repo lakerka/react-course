@@ -1,5 +1,9 @@
+import { stringify } from 'qs';
+
 import * as actionTypes from './actionTypes';
 import client from '../../config';
+
+
 
 export const orderBurgerInit = () => ({ type: actionTypes.ORDER_BURGER_INIT });
 export const orderBurgerStart = () => ({ type: actionTypes.ORDER_BURGER_START });
@@ -17,10 +21,15 @@ export const orderBurger = (order, token) => {
 export const fetchOrdersStart = () => ({ type: actionTypes.FETCH_ORDERS_START });
 export const fetchOrdersSuccess = (orders) => ({ type: actionTypes.FETCH_ORDERS_SUCCESS, orders });
 export const fetchOrdersFail = (error) => ({ type: actionTypes.FETCH_ORDERS_FAIL, error });
-export const fetchOrders = (token) => {
+export const fetchOrders = (token, userId) => {
     return dispatch => {
         dispatch(fetchOrdersStart());
-        client.get('/orders.json?auth=' + token)
+        const queryParams = {
+            auth: token,
+            orderBy: '"userId"',
+            equalTo: `"${userId}"`
+        };
+        client.get('/orders.json?' + stringify(queryParams))
             .then(response => {
                 dispatch(fetchOrdersSuccess(response.data));
             })

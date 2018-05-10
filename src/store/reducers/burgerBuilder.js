@@ -5,7 +5,8 @@ import * as actionsTypes from '../actions/actionTypes';
 const initialState = {
     ingredients: null,
     totalPrice: 0,
-    hasErrors: false
+    hasErrors: false,
+    building: false,
 };
 
 const INGREDIENT_PRICES = {
@@ -22,11 +23,13 @@ const burgerBuilderReducer = (state = initialState, action) => {
         case actionsTypes.ADD_INGREDIENT:
             stateClone.ingredients[action.ingredientName] += 1;
             stateClone.totalPrice += INGREDIENT_PRICES[action.ingredientName];
+            stateClone.building = true;
             return stateClone;
         case actionsTypes.REMOVE_INGREDIENT:
             if (stateClone.ingredients[action.ingredientName] > 0) {
                 stateClone.ingredients[action.ingredientName] -= 1;
                 stateClone.totalPrice -= INGREDIENT_PRICES[action.ingredientName];
+                stateClone.building = true;
             }
             return stateClone;
         case actionsTypes.SET_INGREDIENTS:

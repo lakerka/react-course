@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
+import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import Input from '../../components/UI/Input/Input';
@@ -99,6 +100,14 @@ class Auth extends Component {
     };
 
     render() {
+        if (this.props.isAuthenticated) {
+            if (this.props.buildingBurger) {
+                return <Redirect to="/checkout" />;
+            } else {
+                return <Redirect to="/" />;
+            }
+        }
+
         const spinner = <Spinner/>;
         const inputs = this.state.form.inputs.map((input, i) =>
             <Input
@@ -140,9 +149,11 @@ class Auth extends Component {
     }
 }
 
-const mapStateToProps = ({ auth }) => ({
+const mapStateToProps = ({ burgerBuilder, auth }) => ({
     loading: auth.loading,
     error: auth.error,
+    isAuthenticated: auth.isAuthenticated,
+    buildingBurger: burgerBuilder.building,
 });
 
 const mapDispatchToProps = dispatch => ({

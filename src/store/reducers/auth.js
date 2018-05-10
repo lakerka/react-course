@@ -6,6 +6,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
     token: null,
+    isAuthenticated: false,
     userId: null,
     error: null,
     loading: false
@@ -26,6 +27,7 @@ const authReducer = (state = initialState, action) => {
                 ...stateClone,
                 loading: false,
                 token: action.token,
+                isAuthenticated: true,
                 userId: action.userId,
             };
         case actionTypes.AUTH_FAIL:
@@ -38,6 +40,7 @@ const authReducer = (state = initialState, action) => {
             return {
                 ...stateClone,
                 token: null,
+                isAuthenticated: false,
                 userId: null
             };
         default:

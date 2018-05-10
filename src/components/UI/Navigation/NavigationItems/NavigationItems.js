@@ -11,7 +11,10 @@ class NavigationItems extends Component {
         return (
             <ul className={classes.NavigationItems}>
                 <NavigationItem link="/">Burger Builder</NavigationItem>
-                <NavigationItem link="/orders">Orders</NavigationItem>
+                {
+                    this.props.isAuthenticated &&
+                        <NavigationItem link="/orders">Orders</NavigationItem>
+                }
                 {
                     this.props.isAuthenticated ? logout : authenticate
                 }

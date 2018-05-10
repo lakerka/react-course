@@ -13,4 +13,5 @@ export {
 export {
     auth,
     logout,
+    tryAutoSignIn,
 } from './auth';
