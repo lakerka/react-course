@@ -22,7 +22,7 @@ class SideDrawer extends Component {
                     <div className={classes.Logo}>
                         <Logo/>
                     </div>
-                    <nav>
+                    <nav onClick={this.props.closeHandler}>
                         <NavigationItems isAuthenticated={this.props.isAuthenticated} />
                     </nav>
                 </div>

@@ -9,7 +9,7 @@ import Spinner from '../../UI/Spinner/Spinner';
 import Input from '../../UI/Input/Input';
 import * as actions from '../../../store/actions/index';
 import client from '../../../config';
-
+import { validateInput, validateForm } from '../../../shared/utils';
 
 class Contact extends Component {
     state = {
@@ -112,35 +112,13 @@ class Contact extends Component {
         this.props.orderBurger(order, this.props.token);
     };
 
-    static validateInput(input) {
-        if (input.validation === undefined) {
-            return;
-        }
-        let valid = true;
-        if (input.validation.required && input.value.trim() === '') {
-            valid = false;
-        }
-        input.valid = valid;
-    }
-
-
-    static validateForm(form) {
-        let valid = true;
-        for(const input of form.inputs) {
-            if (input.validation) {
-                 valid = input.valid && valid;
-            }
-        }
-        form.valid = valid;
-    }
-
     formChangeHandler(event, index) {
         const contactDataForm = _.cloneDeep(this.state.contactDataForm);
         const input = contactDataForm.inputs[index];
         input.touched = true;
         input.value = event.target.value;
-        Contact.validateInput(input);
-        Contact.validateForm(contactDataForm);
+        validateInput(input);
+        validateForm(contactDataForm);
         this.setState({ contactDataForm });
     }
 

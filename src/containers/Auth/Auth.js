@@ -8,6 +8,7 @@ import ButtonComponent from '../../components/UI/Button/Button';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import classes from './Auth.css';
 import * as actions from '../../store/actions/index';
+import { validateInput, validateForm } from '../../shared/utils';
 
 class Auth extends Component {
     state = {
@@ -49,41 +50,13 @@ class Auth extends Component {
         }
     };
 
-    static validateInput(input) {
-        if (input.validation === undefined) {
-            return;
-        }
-        let valid = true;
-        if (input.validation.required && input.value.trim() === '') {
-            valid = false;
-        }
-        if (input.validation.minLength && input.value.trim().length < input.validation.minLength) {
-            valid = false;
-        }
-        if (input.validation.isEmail && !input.value.trim().includes('@') ) {
-            valid = false;
-        }
-
-        input.valid = valid;
-    }
-
-    static validateForm(form) {
-        let valid = true;
-        for(const input of form.inputs) {
-            if (input.validation) {
-                 valid = input.valid && valid;
-            }
-        }
-        form.valid = valid;
-    }
-
     formChangeHandler = (event, index) => {
         const form = _.cloneDeep(this.state.form);
         const input = form.inputs[index];
         input.touched = true;
         input.value = event.target.value;
-        Auth.validateInput(input);
-        Auth.validateForm(form);
+        validateInput(input);
+        validateForm(form);
         this.setState({ form });
     };
 
