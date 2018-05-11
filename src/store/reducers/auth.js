@@ -4,7 +4,7 @@ import * as actionTypes from '../actions/actionTypes';
 
 
 
-const initialState = {
+export const initialState = {
     token: null,
     isAuthenticated: false,
     userId: null,
