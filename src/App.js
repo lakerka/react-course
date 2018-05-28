@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Switch, Route, withRouter, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { hot } from 'react-hot-loader'
 
 import './App.css';
 import asyncComponent from './hoc/asyncComponent/asyncComponent';
@@ -70,4 +71,4 @@ const mapDispatchToProps = dispatch => ({
     tryAutoSignIn: () => dispatch(actions.tryAutoSignIn())
 });
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default hot(module)(withRouter(connect(mapStateToProps, mapDispatchToProps)(App)));
